@@ -192,6 +192,18 @@ class Calendar(object):
                 break
             day = day - timedelta(days=1)
         return day
+        
+    @staticmethod
+    def get_last_workday_in_month(year, month):
+        """Get the last business day in a given month. e.g:
+        >>> # the last businessday in Jan 2013
+        >>> Calendar.get_last_workday_in_month(2013, 1)
+        datetime.date(2013, 1, 28)
+        """
+    
+        
+        day = Calendar.find_previous_working_day(WesternCalendar(),date(year,month,monthrange(year, month)[1]))
+        return day
 
 
 class ChristianMixin(Calendar):
