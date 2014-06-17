@@ -150,7 +150,12 @@ class Calendar(object):
             day = day - timedelta(days=1)
         return day
 
-
+    def find_days_before(self,before,day):
+        "Finds business day a specific number of days before given day"
+        day = day - timedelta(days=before)
+        while day.weekday() not in self.get_weekend_days():
+            day = day - timedelta(days=1)
+        return day
 
     @staticmethod
     def get_nth_weekday_in_month(year, month, weekday, n=1, start=None):
