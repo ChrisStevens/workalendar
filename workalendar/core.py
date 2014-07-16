@@ -138,6 +138,7 @@ class Calendar(object):
 
     def find_following_working_day(self, day):
         "Looks for the following working day"
+        day = day + timedelta(days=1)
         while day.weekday() in self.get_weekend_days():
             day = day + timedelta(days=1)
         return day
