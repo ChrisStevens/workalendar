@@ -144,10 +144,10 @@ class Calendar(object):
         
         return day
     
-    def find_previous_working_day(self, calendar,day):
+    def find_previous_working_day(self,day):
         "Looks for previous working day"
         day = day - timedelta(days=1)
-        while not calendar.is_working_day(day):
+        while not self.is_working_day(day):
             day = day - timedelta(days=1)
         return day
 
