@@ -136,18 +136,18 @@ class Calendar(object):
                 days += 1
         return temp_day
 
-    def find_following_working_day(self, day):
+    def find_following_working_day(self, calendar, day):
         "Looks for the following working day"
         day = day + timedelta(days=1)
-        while day.weekday() in self.get_weekend_days():
+        while not calendar.is_working_day(day):
             day = day + timedelta(days=1)
+        
         return day
-        
-        
-    def find_previous_working_day(self,day):
+    
+    def find_previous_working_day(self, calendar,day):
         "Looks for previous working day"
         day = day - timedelta(days=1)
-        while day.weekday() in self.get_weekend_days():
+        while not calendar.is_working_day(day):
             day = day - timedelta(days=1)
         return day
 
