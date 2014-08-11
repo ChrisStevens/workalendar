@@ -14,7 +14,6 @@ from calverter import Calverter
 
 MON, TUE, WED, THU, FRI, SAT, SUN = range(7)
 
-
 class Calendar(object):
 
     FIXED_HOLIDAYS = ()
@@ -135,7 +134,18 @@ class Calendar(object):
                                    extra_holidays=extra_holidays):
                 days += 1
         return temp_day
-
+    
+    
+    def get_last_workday_in_month(self,year, month):
+        """Get the last business day in a given month. e.g:
+        >>> # the last businessday in Jan 2013
+        >>> Calendar.get_last_workday_in_month(2013, 1)
+        datetime.date(2013, 1, 28)
+        """
+    
+        
+        day = Calendar.find_previous_working_day(self,date(year,month,monthrange(year, month)[1]))
+        return day
     def find_following_working_day(self, day):
         "Looks for the following working day"
         day = day + timedelta(days=1)
@@ -150,15 +160,36 @@ class Calendar(object):
         while not self.is_working_day(day):
             day = day - timedelta(days=1)
         return day
-
+    
     def find_days_before(self,before,day):
-        "Finds business day a specific number of business days before given day"
+        "Finds business day a specific number of days before"
         n = 0
         while n < before:
             day = self.find_previous_working_day(day)
             n += 1
         return day
+    
+    
+    def find_specific_business_day(self,number,year,month):
+        """ find a specific business day in a given month. e.g:
+        >>> #10th business day of Feb 2013
+        >>> Calendar.find_specific_business_day(10,2013,2)
+        datetime.date(2013,2,14)
+        """
+        day = date(year,month,1)
+        n = 1
+        while n < number:
+            day = self.find_following_working_day(day)
+            n+= 1 
+        return day
         
+        
+    
+    
+    
+    
+    
+    
     @staticmethod
     def get_nth_weekday_in_month(year, month, weekday, n=1, start=None):
         """Get the nth weekday in a given month. e.g:
@@ -199,18 +230,8 @@ class Calendar(object):
                 break
             day = day - timedelta(days=1)
         return day
-        
-    @staticmethod
-    def get_last_workday_in_month(year, month):
-        """Get the last business day in a given month. e.g:
-        >>> # the last businessday in Jan 2013
-        >>> Calendar.get_last_workday_in_month(2013, 1)
-        datetime.date(2013, 1, 28)
-        """
-    
-        
-        day = Calendar.find_previous_working_day(WesternCalendar(),date(year,month,monthrange(year, month)[1]))
-        return day
+
+
 
 
 class ChristianMixin(Calendar):
