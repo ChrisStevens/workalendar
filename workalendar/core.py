@@ -14,53 +14,6 @@ from calverter import Calverter
 
 MON, TUE, WED, THU, FRI, SAT, SUN = range(7)
 
-from __future__ import (absolute_import, division, print_function,
-                        unicode_literals)
-from datetime import date, timedelta
-from workalendar.core import WesternCalendar, ChristianMixin
-from workalendar.core import SUN, MON, TUE, WED, THU, FRI, SAT
-
-
-class UnitedStates(WesternCalendar, ChristianMixin):
-    "United States of America"
-    FIXED_HOLIDAYS = WesternCalendar.FIXED_HOLIDAYS + (
-        (7, 4, 'Independence Day'),
-        (11, 11, 'Veterans Day'),
-    )
-
-    @staticmethod
-    def is_presidential_year(year):
-        return (year % 4) == 0
-
-    def get_variable_days(self, year):
-        # usual variable days
-        days = super(UnitedStates, self).get_variable_days(year)
-        days += [
-            (UnitedStates.get_nth_weekday_in_month(year, 1, MON, 3),
-                'Martin Luther King, Jr. Day'),
-
-            (UnitedStates.get_nth_weekday_in_month(year, 2, MON, 3),
-                "Washington's Birthday"),
-
-            (UnitedStates.get_last_weekday_in_month(year, 5, MON),
-                "Memorial Day"),
-
-            (UnitedStates.get_nth_weekday_in_month(year, 9, MON),
-                "Labor Day"),
-
-            (UnitedStates.get_nth_weekday_in_month(year, 10, MON, 2),
-                "Colombus Day"),
-
-            (UnitedStates.get_nth_weekday_in_month(year, 11, THU, 4),
-                "Thanksgiving Day"),
-        ]
-        # Inauguration day
-        if UnitedStates.is_presidential_year(year - 1):
-            inauguration_day = date(year, 1, 20)
-            if inauguration_day.weekday() == SUN:
-                inauguration_day = date(year, 1, 21)
-            days.append((inauguration_day, "Inauguration Day"))
-        return days
 
 class Calendar(object):
 
@@ -182,18 +135,7 @@ class Calendar(object):
                                    extra_holidays=extra_holidays):
                 days += 1
         return temp_day
-    
-    
-    def get_last_workday_in_month(self,year, month):
-        """Get the last business day in a given month. e.g:
-        >>> # the last businessday in Jan 2013
-        >>> Calendar.get_last_workday_in_month(2013, 1)
-        datetime.date(2013, 1, 28)
-        """
-    
-        
-        day = Calendar.find_previous_working_day(self,date(year,month,monthrange(year, month)[1]))
-        return day
+
     def find_following_working_day(self, day):
         "Looks for the following working day"
         day = day + timedelta(days=1)
@@ -208,36 +150,15 @@ class Calendar(object):
         while not self.is_working_day(day):
             day = day - timedelta(days=1)
         return day
-    
+
     def find_days_before(self,before,day):
-        "Finds business day a specific number of days before"
+        "Finds business day a specific number of business days before given day"
         n = 0
         while n < before:
             day = self.find_previous_working_day(day)
             n += 1
         return day
-    
-    
-    def find_specific_business_day(self,number,year,month):
-        """ find a specific business day in a given month. e.g:
-        >>> #10th business day of Feb 2013
-        >>> Calendar.find_specific_business_day(10,2013,2)
-        datetime.date(2013,2,14)
-        """
-        day = date(year,month,1)
-        n = 1
-        while n < number:
-            day = self.find_following_working_day(day)
-            n+= 1 
-        return day
         
-        
-    
-    
-    
-    
-    
-    
     @staticmethod
     def get_nth_weekday_in_month(year, month, weekday, n=1, start=None):
         """Get the nth weekday in a given month. e.g:
@@ -278,8 +199,18 @@ class Calendar(object):
                 break
             day = day - timedelta(days=1)
         return day
-
-
+        
+    @staticmethod
+    def get_last_workday_in_month(year, month):
+        """Get the last business day in a given month. e.g:
+        >>> # the last businessday in Jan 2013
+        >>> Calendar.get_last_workday_in_month(2013, 1)
+        datetime.date(2013, 1, 28)
+        """
+    
+        
+        day = Calendar.find_previous_working_day(WesternCalendar(),date(year,month,monthrange(year, month)[1]))
+        return day
 
 
 class ChristianMixin(Calendar):
