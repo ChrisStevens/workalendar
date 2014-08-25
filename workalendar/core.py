@@ -146,6 +146,13 @@ class Calendar(object):
         
         day = Calendar.find_previous_working_day(self,date(year,month,monthrange(year, month)[1]))
         return day
+
+    def find_following_weekday(self, day):
+        "Looks for the following weekday"
+        while day.weekday() in self.get_weekend_days():
+            day = day + timedelta(days=1)
+        return day
+
     def find_following_working_day(self, day):
         "Looks for the following working day"
         day = day + timedelta(days=1)
@@ -377,7 +384,7 @@ class WesternCalendar(Calendar):
         if self.shift_new_years_day:
             if new_year.weekday() in self.get_weekend_days():
                 days.append((
-                    self.find_following_working_day(new_year),
+                    self.find_following_weekday(new_year),
                     "New Year shift"))
         return days
 
