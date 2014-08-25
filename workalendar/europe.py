@@ -1,6 +1,7 @@
 from datetime import date, timedelta
 from workalendar.core import WesternCalendar, ChristianMixin, OrthodoxMixin
 from workalendar.core import THU, MON, FRI, SAT
+from IPython import embed
 
 
 class CzechRepublic(WesternCalendar, ChristianMixin):
@@ -293,15 +294,18 @@ class UnitedKingdom(WesternCalendar, ChristianMixin):
 
     def get_variable_days(self, year):
         days = super(UnitedKingdom, self).get_variable_days(year)
+        #embed()
         days.append(self.get_early_may_bank_holiday(year))
         days.append(self.get_spring_bank_holiday(year))
         days.append(self.get_late_summer_bank_holiday(year))
         # Boxing day & XMas shift
+
         christmas = date(year, 12, 25)
         if christmas.weekday() in self.get_weekend_days():
-            shift = self.find_following_working_day(christmas)
+            shift = self.find_following_weekday(christmas)
             days.append((shift, "Christmas Shift"))
             days.append((shift + timedelta(days=1), "Boxing Day Shift"))
+
         return days
 
 
@@ -353,3 +357,4 @@ class Belgium(WesternCalendar, ChristianMixin):
     include_whit_monday = True
     include_assumption = True
     include_all_saints = True
+
