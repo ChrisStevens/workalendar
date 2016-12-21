@@ -50,7 +50,7 @@ class UnitedStates(WesternCalendar, ChristianMixin):
         if christmas.weekday() in self.get_weekend_days():
             shift = self.find_following_weekday(christmas)
             days.append((shift, "Christmas Shift"))
-            days.append((shift + timedelta(days=1), "Boxing Day Shift")
+            days.append((shift + timedelta(days=1), "Boxing Day Shift"))
         return days
 
 
