@@ -46,6 +46,11 @@ class UnitedStates(WesternCalendar, ChristianMixin):
             if inauguration_day.weekday() == SUN:
                 inauguration_day = date(year, 1, 21)
             days.append((inauguration_day, "Inauguration Day"))
+        #Christmas shift, exchanges have the day after christmas as a holiday if it's
+        if christmas.weekday() in self.get_weekend_days():
+            shift = self.find_following_weekday(christmas)
+            days.append((shift, "Christmas Shift"))
+            days.append((shift + timedelta(days=1), "Boxing Day Shift")
         return days
 
 
